@@ -1,11 +1,13 @@
 // import './app.css'
-import SignUpPage from './signup/SignUpPage'
+// import LoginPage from './component/login/LoginPage'
+import SignUpPage from './component/signup/SignUpPage'
 
 function App() {
 
   return (
     <>
       <SignUpPage></SignUpPage>
+      {/* <LoginPage></LoginPage> */}
     </>
   )
 }
