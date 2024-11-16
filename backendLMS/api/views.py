@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
 from rest_framework import viewsets
 from api.models import Books, Users , Admins, BookTransaction
 from api.serializers import BooksSerializers, UserSerializers, AdminSerializer, BookTransactionSerializer
@@ -46,3 +49,11 @@ def get_recommendations(request, user_id):
     return JsonResponse({
         'demoJson': demo_list_data
     })
+
+class UserSignupView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = UserSerializers(data= request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "User Registered Successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

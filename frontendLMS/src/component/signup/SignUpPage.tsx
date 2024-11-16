@@ -5,7 +5,8 @@ import backbutton from '../../svgFile/backbutton.svg'
 import eyeslash from '../../svgFile/eyeslash.svg'
 import eye from '../../svgFile/eye.svg'
 import { useNavigate } from "react-router-dom";
-const SignUpPage = () => {
+import axios  from "axios";
+const SignUpPage: React.FC = () => {
     const [toggletype, setToggletype] = useState<string>("password");
     const [checkpassword, setCheckpassword] = useState<boolean>(true);
     const [checkcpassword, setCheckcpassword] = useState<boolean>(true);
@@ -13,11 +14,11 @@ const SignUpPage = () => {
     const [errorphone, setErrorphone] = useState<boolean>(false);
     const [firstname, setFirstname] = useState<string>("");
     const [lastname, setLastname] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [phone, setPhone] = useState<string>();
-    const [password, setPassword] = useState<string>("");
+    const [emails, setEmail] = useState<string>("");
+    const [phones, setPhone] = useState<string>();
+    const [passwords, setPassword] = useState<string>("");
     const [cpassword, setCpassword] = useState<string>("");
-
+    const [messages, setMessages] = useState<string>('')
     const emailvalidation = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
         setEmail(newValue);
@@ -58,7 +59,7 @@ const SignUpPage = () => {
     const confirmPasswordValid = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
         setCpassword(newValue);
-        if (password === newValue) {
+        if (passwords === newValue) {
             setCheckcpassword(true);
         } else {
             setCheckcpassword(false);
@@ -74,9 +75,29 @@ const SignUpPage = () => {
         }
     };
 
-    const handleSubmit = () => {
+    const formData = {
+        first_name : firstname,
+        last_name : lastname,
+        email : emails,
+        password : passwords,
+        phone : phones
+    }
+    const handleSubmit = async(e: React.FormEvent) => {
+        e.preventDefault();
+        try{
+            const response = await axios.post('http://127.0.0.1:8000/api/v1/signup/', formData)
+            setMessages(response.data.messages);
+        }
+        catch(error:any){
+            setMessages('Signup failed. Please try again.');
+            console.error(error);
+            
+        }
 
     }
+
+    console.log(messages);
+    
     // console.log(firstname, lastname, email, password, phone);
     const navigate = useNavigate()
     return (
@@ -136,7 +157,7 @@ const SignUpPage = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    value={email}
+                                    value={emails}
                                     onChange={emailvalidation}
                                     name="email"
                                     id="email"
@@ -166,7 +187,7 @@ const SignUpPage = () => {
                                 </label>
                                 <input
                                     type="number"
-                                    value={phone}
+                                    value={phones}
                                     onChange={phoneValidation}
                                     name="mobilenumber"
                                     id="mobilenumber"
@@ -200,7 +221,7 @@ const SignUpPage = () => {
                                     <div>
                                         <input
                                             type={toggletype}
-                                            value={password}
+                                            value={passwords}
                                             onChange={passwordvalidation}
                                             name="password"
                                             id="password"

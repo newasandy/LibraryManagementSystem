@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include
-from api.views import BooksViewSet, UsersViewSet, AdminsViewSet, BookTransactionViewSet , get_recommendations
+from api.views import BooksViewSet, UsersViewSet, AdminsViewSet, BookTransactionViewSet , get_recommendations, UserSignupView
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'books',BooksViewSet)
 router.register(r'users',UsersViewSet)
+# router.register(r'signup',UserSignupView)
 router.register(r'admins', AdminsViewSet)
 router.register(r'booktransaction', BookTransactionViewSet)
 # router.register(r'recommendations/<int:user_id>/', get_recommendations)
@@ -14,6 +15,7 @@ urlpatterns = [
 
     path('', include(router.urls)),
     path('recommendations/<int:user_id>/', get_recommendations, name='get_recommendations'),
+    path('signup/',UserSignupView.as_view(), name='user_signup')
     # path('admin/', admin.site.urls),
 ]
 
